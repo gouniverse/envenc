@@ -29,3 +29,5 @@ $> vault key-remove .env.vault
 ## TODO
 
 - https://github.com/burrowers/garble
+
+- https://github.com/marketplace/actions/go-release-binaries
