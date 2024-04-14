@@ -24,6 +24,8 @@ func Cli(args []string) {
 
 	allowedCommands := []string{
 		"init",
+		"obfuscate",
+		"deobfuscate",
 		"key-list",
 		"key-set",
 		"key-remove",
@@ -36,6 +38,16 @@ func Cli(args []string) {
 
 	if command == "init" {
 		cliVaultInit(args[2:])
+		return
+	}
+
+	if command == "deobfuscate" {
+		cliDeobfuscate(args[2:])
+		return
+	}
+
+	if command == "obfuscate" {
+		cliObfuscate(args[2:])
 		return
 	}
 
@@ -55,6 +67,61 @@ func Cli(args []string) {
 	}
 
 	cliShowHelp()
+}
+
+func cliObfuscate(args []string) {
+	input, err := cliAskString("Enter string to obfuscate:")
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
+		return
+	}
+
+	obf, err := Obfuscate(input)
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
+		return
+	}
+
+	deObf, err := Deobfuscate(obf)
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
+		return
+	}
+
+	if input != deObf {
+		cfmt.Errorln("Sorry, this string is not supported.")
+		return
+	}
+
+	cfmt.Infoln("The obfuscated string is:")
+	cfmt.Successln(obf)
+}
+
+func cliDeobfuscate(args []string) {
+	input, err := cliAskString("Enter string to deobfuscate:")
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
+		return
+	}
+
+	deObf, err := Deobfuscate(input)
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
+		return
+	}
+
+	cfmt.Infoln("The deobfuscated string is:")
+	cfmt.Successln(deObf)
 }
 
 func cliVaultInit(args []string) {
@@ -233,6 +300,8 @@ func cliShowHelp() {
 	cfmt.Infoln(" - key-list [vaultPath] - Lists all the keys in the vault")
 	cfmt.Infoln(" - key-remove [vaultPath] - Removes a key from the vault")
 	cfmt.Infoln(" - key-set [vaultPath] - Sets a key in the vault")
+	cfmt.Infoln(" - obfuscate - Utility function to obfuscate a string")
+	cfmt.Infoln(" - deobfuscate - Utility function to deobfuscate a string")
 	cfmt.Infoln(" - help - Show this help")
 	cfmt.Infoln("")
 	cfmt.Infoln("envenc is a tool for managing encrypted environment variables")
@@ -244,6 +313,8 @@ func cliShowHelp() {
 	cfmt.Infoln("$> envenc key-set .env.vault")
 	cfmt.Infoln("$> envenc key-list .env.vault")
 	cfmt.Infoln("$> envenc key-remove .env.vault")
+	cfmt.Infoln("$> envenc obfuscate")
+	cfmt.Infoln("$> envenc deobfuscate")
 	cfmt.Infoln("")
 	cfmt.Infoln("For more information visit:")
 	cfmt.Infoln("")
@@ -312,4 +383,18 @@ func cliAskValue() (string, error) {
 	}
 
 	return value, nil
+}
+
+func cliAskString(prompt string) (string, error) {
+	cfmt.Infoln(prompt)
+
+	key := ""
+	fmt.Scanln(&key)
+	key = strings.TrimSpace(key)
+
+	if key == "" {
+		return "", errors.New("string cannot be empty")
+	}
+
+	return key, nil
 }

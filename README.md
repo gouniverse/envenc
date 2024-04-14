@@ -40,6 +40,17 @@ $> ./envenc key-list .env.vault
 $> ./envenc key-remove .env.vault
 ```
 
+- To obfuscate a string
+```bash
+$> ./envenc obfuscate
+```
+
+- To deobfuscate a string
+```bash
+$> ./envenc deobfuscate
+```
+
+
 ## TODO
 
 - https://github.com/burrowers/garble
