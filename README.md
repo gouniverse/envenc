@@ -62,3 +62,6 @@ $> ./envenc deobfuscate
 - https://github.com/dotenv-org/godotenvvault
 - https://github.com/romantomjak/env-vault
 - https://github.com/kejrak/envLoader
+- https://github.com/atrzaska/dotenc
+- https://github.com/Shopify/ejson
+- https://github.com/EsteveSegura/crypt
