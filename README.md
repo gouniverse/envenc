@@ -59,6 +59,7 @@ $> ./envenc deobfuscate
 
 ## Similar
 
+- https://github.com/getsops/sops
 - https://github.com/dotenv-org/godotenvvault
 - https://github.com/romantomjak/env-vault
 - https://github.com/kejrak/envLoader
