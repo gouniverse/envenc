@@ -56,3 +56,9 @@ $> ./envenc deobfuscate
 - https://github.com/burrowers/garble
 
 - https://github.com/marketplace/actions/go-release-binaries
+
+## Similar
+
+- https://github.com/dotenv-org/godotenvvault
+- https://github.com/romantomjak/env-vault
+- https://github.com/kejrak/envLoader
