@@ -15,58 +15,81 @@ import (
 )
 
 func Cli(args []string) {
+	commands := map[string]func([]string){
+		"init":        cliVaultInit,
+		"encrypt":     cliEncrypt,
+		"decrypt":     cliDecrypt,
+		"obfuscate":   cliObfuscate,
+		"deobfuscate": cliDeobfuscate,
+		"key-set":     cliVaultKeySet,
+		"key-list":    cliVaultKeyList,
+		"key-remove":  cliVaultKeyRemove,
+	}
+
 	if len(args) < 2 {
-		cliShowHelp()
+		cliShowHelp([]string{})
 		return
 	}
 
-	command := args[1]
+	command := lo.ValueOr(commands, args[1], cliShowHelp)
 
-	allowedCommands := []string{
-		"init",
-		"obfuscate",
-		"deobfuscate",
-		"key-list",
-		"key-set",
-		"key-remove",
-	}
+	command(args[2:])
+}
 
-	if !lo.Contains(allowedCommands, command) {
-		cliShowHelp()
+func cliEncrypt(_ []string) {
+	input, err := cliAskString("Enter string to encode:")
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "init" {
-		cliVaultInit(args[2:])
+	password, err := cliAskPassword()
+
+	if err != nil {
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "deobfuscate" {
-		cliDeobfuscate(args[2:])
+	enc, err := Encrypt(input, password)
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "obfuscate" {
-		cliObfuscate(args[2:])
+	cfmt.Infoln("The encrypted string is:")
+	cfmt.Successln(enc)
+}
+
+func cliDecrypt(_ []string) {
+	input, err := cliAskString("Enter string to decode:")
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "key-set" {
-		cliVaultKeySet(args[2:])
+	password, err := cliAskPassword()
+
+	if err != nil {
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "key-list" {
-		cliVaultKeyList(args[2:])
+	dec, err := Decrypt(input, password)
+
+	if err != nil {
+		cfmt.Errorln("There was an error:")
+		cfmt.Errorln(err)
 		return
 	}
 
-	if command == "key-remove" {
-		cliVaultKeyRemove(args[2:])
-		return
-	}
-
-	cliShowHelp()
+	cfmt.Infoln("The decrypted string is:")
+	cfmt.Successln(dec)
 }
 
 func cliObfuscate(_ []string) {
@@ -294,12 +317,14 @@ func cliVaultPathFromArgs(args []string) (string, error) {
 	return filePath, nil
 }
 
-func cliShowHelp() {
+func cliShowHelp(_ []string) {
 	cfmt.Infoln("Usage:")
 	cfmt.Infoln(" - init [vaultPath] - Initialize the vault")
 	cfmt.Infoln(" - key-list [vaultPath] - Lists all the keys in the vault")
 	cfmt.Infoln(" - key-remove [vaultPath] - Removes a key from the vault")
 	cfmt.Infoln(" - key-set [vaultPath] - Sets a key in the vault")
+	cfmt.Infoln(" - encrypt - Utility function to encrypt a string")
+	cfmt.Infoln(" - decrypt - Utility function to decrypt a string")
 	cfmt.Infoln(" - obfuscate - Utility function to obfuscate a string")
 	cfmt.Infoln(" - deobfuscate - Utility function to deobfuscate a string")
 	cfmt.Infoln(" - help - Show this help")
@@ -313,6 +338,8 @@ func cliShowHelp() {
 	cfmt.Infoln("$> envenc key-set .env.vault")
 	cfmt.Infoln("$> envenc key-list .env.vault")
 	cfmt.Infoln("$> envenc key-remove .env.vault")
+	cfmt.Infoln("$> envenc encrypt")
+	cfmt.Infoln("$> envenc decrypt")
 	cfmt.Infoln("$> envenc obfuscate")
 	cfmt.Infoln("$> envenc deobfuscate")
 	cfmt.Infoln("")

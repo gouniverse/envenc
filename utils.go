@@ -1,10 +1,9 @@
 package envenc
 
 import (
-	"errors"
+	"crypto/rand"
+	"encoding/base64"
 	"os"
-
-	"github.com/gouniverse/crypto"
 )
 
 // fileGetContents reads entire file into a string
@@ -17,7 +16,7 @@ func fileGetContents(filename string) (string, error) {
 func fileExists(filePath string) bool {
 	_, err := os.Stat(filePath)
 
-	return os.IsExist(err)
+	return err == nil
 }
 
 // filePutContents adds content to file
@@ -38,67 +37,33 @@ func strPadLeft(input string, padLength int, padString string) string {
 	return output + input
 }
 
-func vaultOpenFromFile(vaultFilePath string, vaultPassword string) (*store, error) {
-	if !fileExists(vaultFilePath) {
-		return nil, errors.New("vault file does not exist")
-	}
+// strRandom generates random string of specified length
+func strRandom(length int) string {
+	buff := make([]byte, length)
+	rand.Read(buff)
+	str := base64.StdEncoding.EncodeToString(buff)
 
-	encString, err := fileGetContents(vaultFilePath)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if encString == "" {
-		return nil, errors.New("vault file is empty")
-	}
-
-	return vaultOpenFromString(encString, vaultPassword)
+	// Base 64 can be longer than len
+	return str[:length]
 }
 
-func vaultOpenFromString(encString string, vaultPassword string) (*store, error) {
-	if encString == "" {
-		return nil, errors.New("vault is empty")
-	}
+// strRandFromGamma generates random string of specified length with the characters specified in the gamma string
+// func strRandFromGamma(length int, gamma string) string {
+// 	if length <= 0 {
+// 		return ""
+// 	}
 
-	aesEncString, err := crypto.AESFortifiedDecrypt(encString, vaultPassword)
+// 	if gamma == "" {
+// 		return ""
+// 	}
 
-	if err != nil {
-		return nil, err
-	}
+// 	inRune := []rune(gamma)
+// 	out := make([]rune, length) // Pre-allocate for efficiency
 
-	finalDecString, err := crypto.XorFortifiedDecrypt(aesEncString, vaultPassword)
+// 	for i := range out {
+// 		randomIndex := mathRand.IntN(len(inRune))
+// 		out[i] = inRune[randomIndex]
+// 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	if finalDecString == "" {
-		return nil, errors.New("decryption failed")
-	}
-
-	st, err := newStoreFromJSON(finalDecString)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return st, nil
-}
-
-func vaultSave(vaultFilePath string, password string, st store) error {
-	storeJSON, err := st.ToJSON()
-
-	if err != nil {
-		return err
-	}
-
-	xorEncString := crypto.XorFortifiedEncrypt(storeJSON, password)
-	finalEncString, err := crypto.AESFortifiedEncrypt(xorEncString, password)
-
-	if err != nil {
-		return err
-	}
-
-	return filePutContents(vaultFilePath, finalEncString, 0644)
-}
+// 	return string(out)
+// }
