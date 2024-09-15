@@ -11,7 +11,7 @@ import (
 	// "github.com/gouniverse/utils"
 	"github.com/mingrammer/cfmt"
 	"github.com/samber/lo"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 func Cli(args []string) {
@@ -69,7 +69,7 @@ func Cli(args []string) {
 	cliShowHelp()
 }
 
-func cliObfuscate(args []string) {
+func cliObfuscate(_ []string) {
 	input, err := cliAskString("Enter string to obfuscate:")
 
 	if err != nil {
@@ -103,7 +103,7 @@ func cliObfuscate(args []string) {
 	cfmt.Successln(obf)
 }
 
-func cliDeobfuscate(args []string) {
+func cliDeobfuscate(_ []string) {
 	input, err := cliAskString("Enter string to deobfuscate:")
 
 	if err != nil {
@@ -179,7 +179,7 @@ func cliVaultKeyList(args []string) {
 		return
 	}
 
-	data, err := EnvList(vaultPath, vaultPassword)
+	data, err := KeyListFromFile(vaultPath, vaultPassword)
 
 	if err != nil {
 		cfmt.Errorln(err)
@@ -325,7 +325,7 @@ func cliAskPassword() (string, error) {
 	cfmt.Infoln("=================== START: Vault Security ===================")
 	cfmt.Infoln("Enter vault password:")
 
-	passwordBytes, err := terminal.ReadPassword(int(syscall.Stdin))
+	passwordBytes, err := term.ReadPassword(int(syscall.Stdin))
 
 	if err != nil {
 		return "", err

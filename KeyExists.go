@@ -3,7 +3,7 @@ package envenc
 import "errors"
 
 func KeyExists(vaultFilePath string, vaultPassword string, key string) (bool, error) {
-	store, err := vaultOpen(vaultFilePath, vaultPassword)
+	store, err := vaultOpenFromFile(vaultFilePath, vaultPassword)
 
 	if err != nil {
 		return false, err

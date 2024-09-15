@@ -17,11 +17,7 @@ func fileGetContents(filename string) (string, error) {
 func fileExists(filePath string) bool {
 	_, err := os.Stat(filePath)
 
-	if os.IsNotExist(err) {
-		return false
-	}
-
-	return true
+	return os.IsExist(err)
 }
 
 // filePutContents adds content to file
@@ -42,7 +38,7 @@ func strPadLeft(input string, padLength int, padString string) string {
 	return output + input
 }
 
-func vaultOpen(vaultFilePath string, vaultPassword string) (*store, error) {
+func vaultOpenFromFile(vaultFilePath string, vaultPassword string) (*store, error) {
 	if !fileExists(vaultFilePath) {
 		return nil, errors.New("vault file does not exist")
 	}
@@ -55,6 +51,14 @@ func vaultOpen(vaultFilePath string, vaultPassword string) (*store, error) {
 
 	if encString == "" {
 		return nil, errors.New("vault file is empty")
+	}
+
+	return vaultOpenFromString(encString, vaultPassword)
+}
+
+func vaultOpenFromString(encString string, vaultPassword string) (*store, error) {
+	if encString == "" {
+		return nil, errors.New("vault is empty")
 	}
 
 	aesEncString, err := crypto.AESFortifiedDecrypt(encString, vaultPassword)

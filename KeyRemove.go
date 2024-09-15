@@ -1,7 +1,7 @@
 package envenc
 
 func KeyRemove(vaultFilePath string, vaultPassword string, key string) error {
-	vault, err := vaultOpen(vaultFilePath, vaultPassword)
+	vault, err := vaultOpenFromFile(vaultFilePath, vaultPassword)
 
 	if err != nil {
 		return err
