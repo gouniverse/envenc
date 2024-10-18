@@ -2,6 +2,20 @@ package envenc
 
 import "errors"
 
+// KeyExists checks if a key exists in the vault
+//
+// Buisiness logic:
+//   - Open the vault file
+//   - Check if the key exists in the vault
+//
+// Parameters:
+//   - vaultFilePath: The path to the vault file
+//   - vaultPassword: The password to use for the vault
+//   - key: The name of the key to check
+//
+// Returns:
+//   - bool: True if the key exists, false otherwise
+//   - error: An error if the key could not be retrieved
 func KeyExists(vaultFilePath string, vaultPassword string, key string) (bool, error) {
 	store, err := vaultOpenFromFile(vaultFilePath, vaultPassword)
 
@@ -13,9 +27,9 @@ func KeyExists(vaultFilePath string, vaultPassword string, key string) (bool, er
 		return false, errors.New("store is nil")
 	}
 
-	value := store.Get(key)
+	data := store.Data()
 
-	if value == "" {
+	if _, ok := data[key]; ok {
 		return true, nil
 	}
 
