@@ -234,9 +234,7 @@ Vue.createApp({
 				password: this.vaultPassword,
 				key: this.keyAddForm.key,
 				value: this.keyAddForm.value
-			}).done((data) => {
-				response = JSON.parse(data)
-
+			}).done((response) => {
 				if (response.status != "success") {
 					this.keyAddForm.errorMessage = response.message;
 					return;
@@ -262,8 +260,7 @@ Vue.createApp({
 				password: this.vaultPassword,
 				key: this.keyUpdateForm.key,
 				value: this.keyUpdateForm.value
-			}).done((data) => {
-				response = JSON.parse(data)
+			}).done((response) => {
 				if (response.status != "success") {
 					this.keyUpdateForm.errorMessage = response.message;
 					return;
@@ -296,9 +293,7 @@ Vue.createApp({
 				vault: this.vaultPath,
 				password: this.vaultPassword,
 				key: this.keyRemoveForm.key
-			}).done((data) => {
-				response = JSON.parse(data)
-
+			}).done((response) => {
 				if (response.status != "success") {
 					this.keyRemoveForm.errorMessage = response.message;
 					return;
@@ -316,9 +311,7 @@ Vue.createApp({
 		   $.post("?a=keys", {
 			   vault: this.vaultPath,
 			   password: this.vaultPassword
-		   }).done((data) => {
-			   response = JSON.parse(data)
-
+		   }).done((response) => {
 			   if (response.status != "success") {
 				   this.loginForm.errorMessage = response.message;
 				   this.keys = [];
@@ -338,9 +331,7 @@ Vue.createApp({
 			$.post("?a=login", {
 				vault: this.loginForm.vault,
 				password: this.loginForm.password
-			}).done((data) => {
-				response = JSON.parse(data)
-
+			}).done((response) => {
 				if (response.status != "success") {			
 					this.loginForm.errorMessage = response.message;
 					return;
@@ -369,7 +360,7 @@ func (u *ui) appPage(w http.ResponseWriter, r *http.Request) string {
 	page := hb.NewWebpage()
 	page.StyleURL(cdn.BootstrapUnitedCss_5_3_3())
 	page.ScriptURL(cdn.BootstrapJs_5_3_3())
-	page.ScriptURL(cdn.BootstrapIconsCss_1_11_3())
+	page.StyleURL(cdn.BootstrapIconsCss_1_11_3())
 	page.ScriptURL(cdn.Htmx_2_0_0())
 	page.ScriptURL(cdn.VueJs_3())
 	page.ScriptURL(cdn.Jquery_3_7_1())
@@ -561,8 +552,9 @@ func (u *ui) modalKeyUpdate() hb.TagInterface {
 
 func (u *ui) pageKeys() hb.TagInterface {
 	buttonKeyNew := hb.Button().
-		Class("btn btn-primary float-end").
-		Text("➕ Add key").
+		Class("btn btn-success float-end").
+		Child(hb.I().Class("bi bi-plus-circle me-2").Attr("aria-hidden", "true")).
+		Text("New key").
 		Attr("v-on:click", "keyAddModal()")
 
 	title := hb.H1().
@@ -574,9 +566,9 @@ func (u *ui) pageKeys() hb.TagInterface {
 		Class("table").
 		Child(hb.Thead().
 			Child(hb.TR().
-				Child(hb.TH().Text("Key")).
+				Child(hb.TH().Style("width: 1px;").Text("Key")).
 				Child(hb.TH().Text("Value")).
-				Child(hb.TH().Text("Actions")),
+				Child(hb.TH().Style("width: 100px;").Text("Actions")),
 			),
 		).
 		Child(hb.Tbody().
@@ -586,12 +578,14 @@ func (u *ui) pageKeys() hb.TagInterface {
 				Child(hb.TD().Child(hb.PRE().Text("{{ keys[key].substr(0, 100) }}")).Child(hb.Span().Attr("v-if", "keys[key].length > 100").Text("..."))).
 				Child(hb.TD().
 					Child(hb.Button().
-						Class("btn btn-primary btn-sm me-2").
-						Text("✏️ Update").
+						Class("btn btn-info btn-sm me-2").
+						Child(hb.I().Class("bi bi-pencil-square").Attr("aria-hidden", "true")).
+						Title("Update").
 						Attr("v-on:click", "keyUpdateModalShow(key)")).
 					Child(hb.Button().
 						Class("btn btn-danger btn-sm").
-						Text("❌ Remove").
+						Child(hb.I().Class("bi bi-trash").Attr("aria-hidden", "true")).
+						Title("Delete").
 						Attr("v-on:click", "keyRemoveModalShow(key)"))),
 			),
 		)
@@ -617,7 +611,7 @@ func (u *ui) router(w http.ResponseWriter, r *http.Request) string {
 		"/key-add":    u.apiKeyAdd,
 		"/key-update": u.apiKeyUpdate,
 		"/key-remove": u.apiKeyRemove,
-		"/keys":       u.apiKeyAdd,
+		"/keys":       u.apiKeys,
 		"/login":      u.apiLogin,
 		"/":           u.appPage,
 	}
