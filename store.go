@@ -2,16 +2,21 @@ package envenc
 
 import "github.com/gouniverse/dataobject"
 
-// store
+// store represents the vault
+//
+// The store extends DataObject to store the data as key/value pairs in memory
+// and provides a convenient method to serialize and deserialize it to JSON
 type store struct {
 	dataobject.DataObject
 }
 
+// newStore creates a new empty store
 func newStore() *store {
 	o := &store{}
 	return o
 }
 
+// newStoreFromJSON creates a store from a JSON string
 func newStoreFromJSON(json string) (*store, error) {
 	o := &store{}
 
@@ -26,6 +31,7 @@ func newStoreFromJSON(json string) (*store, error) {
 	return o, nil
 }
 
+// ToJSON converts the store data to a JSON string
 func (o *store) ToJSON() (string, error) {
 	json, err := o.DataObject.ToJSON()
 
@@ -40,6 +46,7 @@ func (o *store) ToJSON() (string, error) {
 	return json, nil
 }
 
+// Remove removes a key from the store
 func (o *store) Remove(key string) *store {
 	data := o.Data()
 	delete(data, key)
