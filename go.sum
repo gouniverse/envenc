@@ -9,8 +9,8 @@ github.com/gouniverse/crypto v0.2.0 h1:7ppqn9FrwrlC6nTfgVBnEop5cKBFNEZyP5yXoUH7M
 github.com/gouniverse/crypto v0.2.0/go.mod h1:uWfzSf1dsYyij6yrVTdxuLFfLZIvSJu24+x3sj+DLXU=
 github.com/gouniverse/dataobject v0.3.0 h1:4m6zH8q3/Z159MrkX64gZO884SC2RE35FFzM186ohU8=
 github.com/gouniverse/dataobject v0.3.0/go.mod h1:kGYa0bv14xCmkTCW2CpF9dIkh+S1N3O04c5eJY1jFqg=
-github.com/gouniverse/hb v1.77.5 h1:J7HT8qeULqwHx0oaFR6elLOZ7BTdWMncWaOS/SjcXNM=
-github.com/gouniverse/hb v1.77.5/go.mod h1:NpqGB1C2XmuG8RemolepbiKWLdL9UDqYTdT3IoNRv1g=
+github.com/gouniverse/hb v1.78.0 h1:Cm0Ge9EkT1eWrEw6zTynz0AKJS7FLtYx8tluftl3m3w=
+github.com/gouniverse/hb v1.78.0/go.mod h1:WDUCGoptHp/fAYT634lQ2846sGx88yXOOWMvlEaezYM=
 github.com/gouniverse/uid v1.5.0 h1:evyGegnY7+KeYirDhJntI9xmODf8jPMQw8DlMpQIPnM=
 github.com/gouniverse/uid v1.5.0/go.mod h1:06dzYTyBLOu+iRlKZ8GxzEfgDSLyoZwgKns9Fcvt7G4=
 github.com/gouniverse/webserver v0.1.0 h1:dUADAFgI4QjbAGc5zjRBdy0cWm4jq9lQNCOSGyIrnos=
