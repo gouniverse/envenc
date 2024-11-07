@@ -13,7 +13,7 @@ import (
 	"golang.org/x/term"
 )
 
-type CliV3 struct {
+type Cli struct {
 	commands map[string]func([]string)
 
 	errorMessage  string
@@ -21,20 +21,20 @@ type CliV3 struct {
 	vaultPassword string
 }
 
-func NewCliV3() *CliV3 {
-	return &CliV3{
+func NewCli() *Cli {
+	return &Cli{
 		commands: map[string]func([]string){
-			"init":        (&CliV3{}).VaultInit,
-			"encrypt":     (&CliV3{}).Encrypt,
-			"decrypt":     (&CliV3{}).Decrypt,
-			"obfuscate":   (&CliV3{}).Obfuscate,
-			"deobfuscate": (&CliV3{}).Deobfuscate,
-			"help":        (&CliV3{}).Help,
-			"key-set":     (&CliV3{}).VaultKeySet,
-			"key-get":     (&CliV3{}).VaultKeyGet,
-			"key-list":    (&CliV3{}).VaultKeyList,
-			"key-remove":  (&CliV3{}).VaultKeyRemove,
-			"ui":          (&CliV3{}).UI,
+			"init":        (&Cli{}).VaultInit,
+			"encrypt":     (&Cli{}).Encrypt,
+			"decrypt":     (&Cli{}).Decrypt,
+			"obfuscate":   (&Cli{}).Obfuscate,
+			"deobfuscate": (&Cli{}).Deobfuscate,
+			"help":        (&Cli{}).Help,
+			"key-set":     (&Cli{}).VaultKeySet,
+			"key-get":     (&Cli{}).VaultKeyGet,
+			"key-list":    (&Cli{}).VaultKeyList,
+			"key-remove":  (&Cli{}).VaultKeyRemove,
+			"ui":          (&Cli{}).UI,
 		},
 	}
 }
@@ -45,7 +45,7 @@ func NewCliV3() *CliV3 {
 // $> envenc ui
 // $> envenc ui 123.vault
 // $> envenc ui 123.vault --address 127.0.0.1:38080
-func (c *CliV3) UI(args []string) {
+func (c *Cli) UI(args []string) {
 	vaultPathOptional, errorMessage := c.FindVaultPathFromArgs(args)
 
 	if errorMessage != "" {
@@ -64,7 +64,7 @@ func (c *CliV3) UI(args []string) {
 }
 
 // Encrypt encrypts a string
-func (c *CliV3) Encrypt(args []string) {
+func (c *Cli) Encrypt(args []string) {
 	input, err := c.askString("Enter string to encrypt:")
 
 	if err != nil {
@@ -93,7 +93,7 @@ func (c *CliV3) Encrypt(args []string) {
 }
 
 // Decrypt decrypts a string
-func (c *CliV3) Decrypt(args []string) {
+func (c *Cli) Decrypt(args []string) {
 	input, err := c.askString("Enter string to decrypt:")
 
 	if err != nil {
@@ -121,7 +121,7 @@ func (c *CliV3) Decrypt(args []string) {
 	cfmt.Successln(dec)
 }
 
-func (c *CliV3) Obfuscate(args []string) {
+func (c *Cli) Obfuscate(args []string) {
 	input, err := c.askString("Enter string to obfuscate:")
 
 	if err != nil {
@@ -155,7 +155,7 @@ func (c *CliV3) Obfuscate(args []string) {
 	cfmt.Successln(obf)
 }
 
-func (c *CliV3) Deobfuscate(args []string) {
+func (c *Cli) Deobfuscate(args []string) {
 	input, err := c.askString("Enter string to deobfuscate:")
 
 	if err != nil {
@@ -189,7 +189,7 @@ func (c *CliV3) Deobfuscate(args []string) {
 // Example:
 // $> envenc vault-key-list
 // $> envenc vault-key-list 123.vault
-func (c *CliV3) VaultKeyList(args []string) {
+func (c *Cli) VaultKeyList(args []string) {
 	c.vaultPath, c.errorMessage = c.FindVaultPathFromArgs(args)
 
 	if c.errorMessage != "" {
@@ -257,7 +257,7 @@ func (c *CliV3) VaultKeyList(args []string) {
 // Examples:
 // $> envenc key-get
 // $> envenc key-get 123.vault
-func (c *CliV3) VaultKeyGet(args []string) {
+func (c *Cli) VaultKeyGet(args []string) {
 	c.vaultPath, c.errorMessage = c.FindVaultPathFromArgs(args)
 
 	if c.errorMessage != "" {
@@ -337,7 +337,7 @@ func (c *CliV3) VaultKeyGet(args []string) {
 // Examples:
 // $> envenc key-remove
 // $> envenc key-remove 123.vault
-func (c *CliV3) VaultKeyRemove(args []string) {
+func (c *Cli) VaultKeyRemove(args []string) {
 	c.vaultPath, c.errorMessage = c.FindVaultPathFromArgs(args)
 
 	if c.errorMessage != "" {
@@ -415,7 +415,7 @@ func (c *CliV3) VaultKeyRemove(args []string) {
 // Examples:
 // $> envenc key-set
 // $> envenc key-set 123.vault
-func (c *CliV3) VaultKeySet(args []string) {
+func (c *Cli) VaultKeySet(args []string) {
 	c.vaultPath, c.errorMessage = c.FindVaultPathFromArgs(args)
 
 	if c.errorMessage != "" {
@@ -484,7 +484,7 @@ func (c *CliV3) VaultKeySet(args []string) {
 // Examples:
 // $> envenc init
 // $> envenc init 123.vault
-func (c *CliV3) VaultInit(args []string) {
+func (c *Cli) VaultInit(args []string) {
 	c.vaultPath, c.errorMessage = c.FindVaultPathFromArgs(args)
 
 	if c.errorMessage != "" {
@@ -524,7 +524,7 @@ func (c *CliV3) VaultInit(args []string) {
 //   - Ask the user to enter a password
 //   - If the user enters an empty password, return an error
 //   - Otherwise return the password
-func (c *CliV3) AskVaultPassword() (string, errorMessage string) {
+func (c *Cli) AskVaultPassword() (string, errorMessage string) {
 	password, err := c.askPassword("Enter password:")
 
 	if err != nil {
@@ -548,7 +548,7 @@ func (c *CliV3) AskVaultPassword() (string, errorMessage string) {
 //   - Confirm the password to avoid any spelling mistakes
 //   - If the password and confirmation do not match, return an error
 //   - Otherwise return the password
-func (c *CliV3) AskVaultPasswordWithConfirm() (string, errorMessage string) {
+func (c *Cli) AskVaultPasswordWithConfirm() (string, errorMessage string) {
 	password, err := c.askPassword("Enter the password:")
 
 	if err != nil {
@@ -584,7 +584,7 @@ func (c *CliV3) AskVaultPasswordWithConfirm() (string, errorMessage string) {
 //   - To confirm its a .vault file, we check the extension
 //   - If the extension is not .vault, return an error
 //   - Otherwise return the file path
-func (c *CliV3) AskVaultPath() (string, errorMessage string) {
+func (c *Cli) AskVaultPath() (string, errorMessage string) {
 	filePath, err := c.askString("Enter the path to the vault file:")
 
 	if err != nil {
@@ -613,7 +613,7 @@ func (c *CliV3) AskVaultPath() (string, errorMessage string) {
 //   - If the user enters an empty name, return an error
 //   - If the name contains spaces, return an error
 //   - Otherwise return the name
-func (c *CliV3) AskKeyName() (string, errorMessage string) {
+func (c *Cli) AskKeyName() (string, errorMessage string) {
 	keyName, err := c.askString("Specify the name of the key (i.e. 'DB_PASSWORD'):")
 
 	if err != nil {
@@ -639,7 +639,7 @@ func (c *CliV3) AskKeyName() (string, errorMessage string) {
 //   - Ask the user to enter the value of the key (allowing multiline)
 //   - If the user enters an empty value, do not return an error, it is ok
 //   - Otherwise return the value
-func (c *CliV3) AskKeyValue() (string, errorMessage string) {
+func (c *Cli) AskKeyValue() (string, errorMessage string) {
 	keyValue, err := c.askString("Enter the value of the key:")
 
 	if err != nil {
@@ -651,7 +651,7 @@ func (c *CliV3) AskKeyValue() (string, errorMessage string) {
 	return keyValue, ""
 }
 
-func (c *CliV3) askString(prompt string) (string, error) {
+func (c *Cli) askString(prompt string) (string, error) {
 	cfmt.Infoln(prompt)
 
 	key := ""
@@ -665,7 +665,7 @@ func (c *CliV3) askString(prompt string) (string, error) {
 	return key, nil
 }
 
-func (c *CliV3) askPassword(prompt string) (string, error) {
+func (c *Cli) askPassword(prompt string) (string, error) {
 	cfmt.Infoln(prompt)
 
 	passwordBytes, err := term.ReadPassword(int(syscall.Stdin))
@@ -698,7 +698,7 @@ func (c *CliV3) askPassword(prompt string) (string, error) {
 // Returns:
 //   - filePath: The file path
 //   - errorMessage: The error message
-func (c *CliV3) FindVaultPathFromArgs(args []string) (filePath string, errorMessage string) {
+func (c *Cli) FindVaultPathFromArgs(args []string) (filePath string, errorMessage string) {
 	if len(args) < 1 {
 		return "", ""
 	}
@@ -719,7 +719,7 @@ func (c *CliV3) FindVaultPathFromArgs(args []string) (filePath string, errorMess
 	return filePath, ""
 }
 
-func (c *CliV3) Help(_ []string) {
+func (c *Cli) Help(_ []string) {
 	cfmt.Infoln("Usage:")
 	cfmt.Infoln(" - init [vaultPath] - Initialize the vault")
 	cfmt.Infoln(" - key-list [vaultPath] - Lists all the keys in the vault")
@@ -767,7 +767,7 @@ func (c *CliV3) Help(_ []string) {
 //
 // Returns
 //   - None
-func (c *CliV3) Run(args []string) {
+func (c *Cli) Run(args []string) {
 	if len(args) < 2 {
 		c.Help([]string{})
 		return

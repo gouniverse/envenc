@@ -24,21 +24,25 @@ func filePutContents(filename string, data string, mode os.FileMode) error {
 	return os.WriteFile(filename, []byte(data), mode)
 }
 
-func strPadLeft(input string, padLength int, padString string) string {
-	output := ""
-	inputLen := len(input)
-	if inputLen >= padLength {
-		return input
-	}
-	ll := padLength - inputLen
-	for i := 1; i <= ll; i = i + len(padString) {
-		output += padString
-	}
-	return output + input
-}
+// func strPadLeft(input string, padLength int, padString string) string {
+// 	output := ""
+// 	inputLen := len(input)
+// 	if inputLen >= padLength {
+// 		return input
+// 	}
+// 	ll := padLength - inputLen
+// 	for i := 1; i <= ll; i = i + len(padString) {
+// 		output += padString
+// 	}
+// 	return output + input
+// }
 
 // strRandom generates random string of specified length
 func strRandom(length int) string {
+	if length <= 0 {
+		return ""
+	}
+
 	buff := make([]byte, length)
 	rand.Read(buff)
 	str := base64.StdEncoding.EncodeToString(buff)
