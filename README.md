@@ -8,6 +8,10 @@
 
 Secures your .env files with a password. Works similarly to ansible-vault.
 
+A user friendly CLI interface to create and manage .env.vault files.
+
+In addition provides a convenient web based user interface to manage your .env.vault files.
+
 ## Usage
 
 1. Leave your public variables in your `.env` file.
@@ -29,6 +33,30 @@ $> ./envenc key-set .env.vault
 ```bash
 $> keys := env.KeyListFromFile(password, ".env.vault")
 ```
+
+## Screenshots
+
+The web interface is simple and straightforward to use.
+
+- Login Screen
+
+![screenshot](./screenshots/screenshot-1.png)
+
+- Add New Key
+
+![screenshot](./screenshots/screenshot-2.png)
+
+- List Keys
+
+![screenshot](./screenshots/screenshot-3.png)
+
+- Update Key
+
+![screenshot](./screenshots/screenshot-4.png)
+
+- Delete Key
+
+![screenshot](./screenshots/screenshot-5.png)
 
 ## Installation
 
