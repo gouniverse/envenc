@@ -12,7 +12,7 @@ A user friendly CLI interface to create and manage .env.vault files.
 
 In addition provides a convenient web based user interface to manage your .env.vault files.
 
-## Usage
+## CLI Usage
 
 1. Leave your public variables in your `.env` file.
 
@@ -32,6 +32,18 @@ $> ./envenc key-set .env.vault
 
 ```bash
 $> keys := env.KeyListFromFile(password, ".env.vault")
+```
+
+## Web UI Usage
+
+The web ui is a simple user interface to manage your `.env.vault` files.
+
+It provides a convenient and fast way to visually manage your keys.
+
+To run the web ui use:
+
+```bash
+$> ./envenc ui .env.vault
 ```
 
 ## Screenshots
