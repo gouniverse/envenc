@@ -58,6 +58,9 @@ func (u *ui) apiKeys(w http.ResponseWriter, r *http.Request) string {
 		return api.Error(err.Error()).ToString()
 	}
 
+	// delete id, as it is reserved
+	delete(keys, "id")
+
 	return api.SuccessWithData("Keys successful", map[string]any{
 		"keys": keys,
 	}).ToString()
@@ -121,6 +124,10 @@ func (u *ui) apiKeyRemove(w http.ResponseWriter, r *http.Request) string {
 
 	if key == "" {
 		return api.Error("Key is required").ToString()
+	}
+
+	if key == "id" {
+		return api.Error("Key 'id' cannot be removed, it is a reserved key.").ToString()
 	}
 
 	if !u.fileExists(vault) {
@@ -372,7 +379,7 @@ func (u *ui) appPage(w http.ResponseWriter, r *http.Request) string {
 func (u *ui) modalKeyAdd() hb.TagInterface {
 	buttonKeyAdd := hb.Button().
 		Class("btn btn-primary").
-		Text("Add key").
+		Text("Save").
 		Attr("v-on:click", "keyAdd()")
 	buttonModalClose := hb.Button().
 		Class("btn btn-secondary").
@@ -432,7 +439,7 @@ func (u *ui) modalKeyAdd() hb.TagInterface {
 func (u *ui) modalKeyRemove() hb.TagInterface {
 	buttonKeyRemove := hb.Button().
 		Class("btn btn-danger").
-		Text("Remove").
+		Text("Delete").
 		Attr("v-on:click", "keyRemove()")
 	buttonModalClose := hb.Button().
 		Class("btn btn-secondary").
@@ -491,7 +498,7 @@ func (u *ui) modalKeyRemove() hb.TagInterface {
 func (u *ui) modalKeyUpdate() hb.TagInterface {
 	buttonKeyUpdate := hb.Button().
 		Class("btn btn-primary").
-		Text("Update").
+		Text("Save").
 		Attr("v-on:click", "keyUpdate(key)")
 	buttonModalClose := hb.Button().
 		Class("btn btn-secondary").
