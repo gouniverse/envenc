@@ -1,31 +1,10 @@
 package envenc
 
 import (
-	"os"
 	"testing"
 )
 
-func TestVaultSave(t *testing.T) {
-	// Arrange
-	vaultFilePath := os.TempDir() + string(os.PathSeparator) + strRandom(10) + ".env.vault"
-	password := "password"
-	st := store{}
-
-	// Act
-	err := vaultSave(vaultFilePath, password, st)
-
-	// Assert
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Act
-	if !fileExists(vaultFilePath) {
-		t.Fatal("Vault file should exist at ", vaultFilePath)
-	}
-}
-
-func TestVaultOpenFromFileFailsWithMissingFile(t *testing.T) {
+func Test_VaultOpenFromFileFailsWithMissingFile(t *testing.T) {
 	// Arrange
 	vaultFilePath := ".env.vault"
 

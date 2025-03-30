@@ -12,7 +12,9 @@ type store struct {
 
 // newStore creates a new empty store
 func newStore() *store {
-	o := &store{}
+	o := &store{
+		DataObject: *dataobject.New(),
+	}
 	return o
 }
 
@@ -20,7 +22,7 @@ func newStore() *store {
 func newStoreFromJSON(json string) (*store, error) {
 	o := &store{}
 
-	do, err := dataobject.NewDataObjectFromJSON(json)
+	do, err := dataobject.NewFromJSON(json)
 
 	if err != nil {
 		return nil, err
